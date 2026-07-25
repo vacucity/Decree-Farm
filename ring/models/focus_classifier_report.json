@@ -1,0 +1,580 @@
+{
+  "model_type": "random_forest_window_features",
+  "database": "C:\\Users\\23017\\Desktop\\ring_sound_SDK\\data.db",
+  "raw_stored_samples": 207705,
+  "windows": 1746,
+  "features": 63,
+  "sessions": 42,
+  "users": [
+    "demo-user-01",
+    "demo-user-02",
+    "demo-user-03",
+    "demo-user-04",
+    "demo-user-05"
+  ],
+  "label_windows": {
+    "focused": 911,
+    "distracted": 835
+  },
+  "split": {
+    "train_sessions": [
+      3,
+      4,
+      5,
+      8,
+      12,
+      14,
+      15,
+      22,
+      26,
+      27,
+      28,
+      29,
+      31,
+      32,
+      34,
+      38,
+      40,
+      42,
+      43,
+      44,
+      46,
+      47,
+      48,
+      49,
+      51,
+      52,
+      54
+    ],
+    "validation_sessions": [
+      7,
+      16,
+      30,
+      35,
+      36,
+      50
+    ],
+    "test_sessions": [
+      10,
+      13,
+      23,
+      25,
+      33,
+      37,
+      39,
+      41,
+      53
+    ]
+  },
+  "validation": {
+    "windows": 197,
+    "accuracy": 0.665,
+    "balanced_accuracy": 0.6525,
+    "precision_focused": 0.7414,
+    "recall_focused": 0.7049,
+    "recall_distracted": 0.6,
+    "f1_focused": 0.7227,
+    "confusion_matrix": [
+      [
+        45,
+        30
+      ],
+      [
+        36,
+        86
+      ]
+    ],
+    "roc_auc": 0.6256
+  },
+  "test": {
+    "windows": 384,
+    "accuracy": 0.7109,
+    "balanced_accuracy": 0.7147,
+    "precision_focused": 0.8116,
+    "recall_focused": 0.5685,
+    "recall_distracted": 0.861,
+    "f1_focused": 0.6687,
+    "confusion_matrix": [
+      [
+        161,
+        26
+      ],
+      [
+        85,
+        112
+      ]
+    ],
+    "roc_auc": 0.7835
+  },
+  "decision_threshold": 0.38499999999999995,
+  "smoothing_predictions": 7,
+  "leave_one_user_out": [
+    {
+      "windows": 602,
+      "accuracy": 0.7226,
+      "balanced_accuracy": 0.699,
+      "precision_focused": 0.7943,
+      "recall_focused": 0.7761,
+      "recall_distracted": 0.622,
+      "f1_focused": 0.7851,
+      "confusion_matrix": [
+        [
+          130,
+          79
+        ],
+        [
+          88,
+          305
+        ]
+      ],
+      "roc_auc": 0.8046,
+      "fold": 1,
+      "held_out_users": [
+        "demo-user-01"
+      ]
+    },
+    {
+      "windows": 427,
+      "accuracy": 0.4684,
+      "balanced_accuracy": 0.5168,
+      "precision_focused": 0.3953,
+      "recall_focused": 0.7256,
+      "recall_distracted": 0.308,
+      "f1_focused": 0.5118,
+      "confusion_matrix": [
+        [
+          81,
+          182
+        ],
+        [
+          45,
+          119
+        ]
+      ],
+      "roc_auc": 0.5879,
+      "fold": 2,
+      "held_out_users": [
+        "demo-user-05"
+      ]
+    },
+    {
+      "windows": 367,
+      "accuracy": 0.4659,
+      "balanced_accuracy": 0.4411,
+      "precision_focused": 0.2114,
+      "recall_focused": 0.3895,
+      "recall_distracted": 0.4926,
+      "f1_focused": 0.2741,
+      "confusion_matrix": [
+        [
+          134,
+          138
+        ],
+        [
+          58,
+          37
+        ]
+      ],
+      "roc_auc": 0.5101,
+      "fold": 3,
+      "held_out_users": [
+        "demo-user-04"
+      ]
+    },
+    {
+      "windows": 202,
+      "accuracy": 0.5248,
+      "balanced_accuracy": 0.495,
+      "precision_focused": 0.6695,
+      "recall_focused": 0.5809,
+      "recall_distracted": 0.4091,
+      "f1_focused": 0.622,
+      "confusion_matrix": [
+        [
+          27,
+          39
+        ],
+        [
+          57,
+          79
+        ]
+      ],
+      "roc_auc": 0.5277,
+      "fold": 4,
+      "held_out_users": [
+        "demo-user-02"
+      ]
+    },
+    {
+      "windows": 148,
+      "accuracy": 0.4527,
+      "balanced_accuracy": 0.352,
+      "precision_focused": 0.7561,
+      "recall_focused": 0.5041,
+      "recall_distracted": 0.2,
+      "f1_focused": 0.6049,
+      "confusion_matrix": [
+        [
+          5,
+          20
+        ],
+        [
+          61,
+          62
+        ]
+      ],
+      "roc_auc": 0.2286,
+      "fold": 5,
+      "held_out_users": [
+        "demo-user-03"
+      ]
+    }
+  ],
+  "session_summary": [
+    {
+      "session_id": 3,
+      "label": "focused",
+      "user_id": "demo-user-01",
+      "task_type": "电脑打字",
+      "raw_samples": 6188,
+      "windows": 53
+    },
+    {
+      "session_id": 4,
+      "label": "focused",
+      "user_id": "demo-user-01",
+      "task_type": "使用鼠标",
+      "raw_samples": 6942,
+      "windows": 60
+    },
+    {
+      "session_id": 5,
+      "label": "focused",
+      "user_id": "demo-user-01",
+      "task_type": "使用鼠标",
+      "raw_samples": 7462,
+      "windows": 65
+    },
+    {
+      "session_id": 7,
+      "label": "focused",
+      "user_id": "demo-user-01",
+      "task_type": "手写笔记",
+      "raw_samples": 6645,
+      "windows": 57
+    },
+    {
+      "session_id": 8,
+      "label": "focused",
+      "user_id": "demo-user-01",
+      "task_type": "看网课",
+      "raw_samples": 6526,
+      "windows": 61
+    },
+    {
+      "session_id": 10,
+      "label": "focused",
+      "user_id": "demo-user-01",
+      "task_type": "阅读",
+      "raw_samples": 6630,
+      "windows": 60
+    },
+    {
+      "session_id": 12,
+      "label": "distracted",
+      "user_id": "demo-user-01",
+      "task_type": "刷手机",
+      "raw_samples": 6578,
+      "windows": 57
+    },
+    {
+      "session_id": 13,
+      "label": "distracted",
+      "user_id": "demo-user-01",
+      "task_type": "玩弄物品",
+      "raw_samples": 4368,
+      "windows": 27
+    },
+    {
+      "session_id": 14,
+      "label": "distracted",
+      "user_id": "demo-user-01",
+      "task_type": "手部小动作",
+      "raw_samples": 4810,
+      "windows": 44
+    },
+    {
+      "session_id": 15,
+      "label": "distracted",
+      "user_id": "demo-user-01",
+      "task_type": "身体动作",
+      "raw_samples": 4524,
+      "windows": 40
+    },
+    {
+      "session_id": 16,
+      "label": "distracted",
+      "user_id": "demo-user-01",
+      "task_type": "离开任务",
+      "raw_samples": 1965,
+      "windows": 11
+    },
+    {
+      "session_id": 22,
+      "label": "focused",
+      "user_id": "demo-user-01",
+      "task_type": "电脑工作",
+      "raw_samples": 5590,
+      "windows": 37
+    },
+    {
+      "session_id": 23,
+      "label": "focused",
+      "user_id": "demo-user-02",
+      "task_type": "电脑工作",
+      "raw_samples": 6188,
+      "windows": 53
+    },
+    {
+      "session_id": 25,
+      "label": "focused",
+      "user_id": "demo-user-02",
+      "task_type": "使用鼠标",
+      "raw_samples": 5250,
+      "windows": 48
+    },
+    {
+      "session_id": 26,
+      "label": "focused",
+      "user_id": "demo-user-02",
+      "task_type": "阅读",
+      "raw_samples": 4290,
+      "windows": 35
+    },
+    {
+      "session_id": 27,
+      "label": "distracted",
+      "user_id": "demo-user-02",
+      "task_type": "吃东西",
+      "raw_samples": 3250,
+      "windows": 28
+    },
+    {
+      "session_id": 28,
+      "label": "distracted",
+      "user_id": "demo-user-02",
+      "task_type": "刷手机",
+      "raw_samples": 4275,
+      "windows": 38
+    },
+    {
+      "session_id": 29,
+      "label": "distracted",
+      "user_id": "demo-user-01",
+      "task_type": "离开任务",
+      "raw_samples": 2678,
+      "windows": 8
+    },
+    {
+      "session_id": 30,
+      "label": "distracted",
+      "user_id": "demo-user-01",
+      "task_type": "身体动作",
+      "raw_samples": 3406,
+      "windows": 22
+    },
+    {
+      "session_id": 31,
+      "label": "focused",
+      "user_id": "demo-user-03",
+      "task_type": "电脑打字",
+      "raw_samples": 4134,
+      "windows": 29
+    },
+    {
+      "session_id": 32,
+      "label": "focused",
+      "user_id": "demo-user-03",
+      "task_type": "点击鼠标",
+      "raw_samples": 6275,
+      "windows": 58
+    },
+    {
+      "session_id": 33,
+      "label": "focused",
+      "user_id": "demo-user-03",
+      "task_type": "滑动鼠标",
+      "raw_samples": 4082,
+      "windows": 36
+    },
+    {
+      "session_id": 34,
+      "label": "distracted",
+      "user_id": "demo-user-03",
+      "task_type": "刷手机",
+      "raw_samples": 3000,
+      "windows": 25
+    },
+    {
+      "session_id": 35,
+      "label": "focused",
+      "user_id": "demo-user-04",
+      "task_type": "工作",
+      "raw_samples": 4600,
+      "windows": 37
+    },
+    {
+      "session_id": 36,
+      "label": "distracted",
+      "user_id": "demo-user-04",
+      "task_type": "刷手机",
+      "raw_samples": 5175,
+      "windows": 42
+    },
+    {
+      "session_id": 37,
+      "label": "distracted",
+      "user_id": "demo-user-04",
+      "task_type": "吃零食",
+      "raw_samples": 6552,
+      "windows": 56
+    },
+    {
+      "session_id": 38,
+      "label": "distracted",
+      "user_id": "demo-user-04",
+      "task_type": "喝水",
+      "raw_samples": 4628,
+      "windows": 42
+    },
+    {
+      "session_id": 39,
+      "label": "distracted",
+      "user_id": "demo-user-04",
+      "task_type": "摸鱼",
+      "raw_samples": 5434,
+      "windows": 50
+    },
+    {
+      "session_id": 40,
+      "label": "distracted",
+      "user_id": "demo-user-04",
+      "task_type": "离开工位",
+      "raw_samples": 4264,
+      "windows": 38
+    },
+    {
+      "session_id": 41,
+      "label": "distracted",
+      "user_id": "demo-user-04",
+      "task_type": "离开工位",
+      "raw_samples": 5750,
+      "windows": 44
+    },
+    {
+      "session_id": 42,
+      "label": "focused",
+      "user_id": "demo-user-04",
+      "task_type": "阅读",
+      "raw_samples": 6266,
+      "windows": 58
+    },
+    {
+      "session_id": 43,
+      "label": "distracted",
+      "user_id": "demo-user-05",
+      "task_type": "刷手机",
+      "raw_samples": 6058,
+      "windows": 56
+    },
+    {
+      "session_id": 44,
+      "label": "distracted",
+      "user_id": "demo-user-05",
+      "task_type": "刷手机",
+      "raw_samples": 5434,
+      "windows": 50
+    },
+    {
+      "session_id": 46,
+      "label": "focused",
+      "user_id": "demo-user-05",
+      "task_type": "阅读电子文档",
+      "raw_samples": 6175,
+      "windows": 55
+    },
+    {
+      "session_id": 47,
+      "label": "focused",
+      "user_id": "demo-user-05",
+      "task_type": "电脑打字",
+      "raw_samples": 6890,
+      "windows": 59
+    },
+    {
+      "session_id": 48,
+      "label": "distracted",
+      "user_id": "demo-user-05",
+      "task_type": "明显晃手",
+      "raw_samples": 4030,
+      "windows": 35
+    },
+    {
+      "session_id": 49,
+      "label": "distracted",
+      "user_id": "demo-user-05",
+      "task_type": "安静发呆",
+      "raw_samples": 4758,
+      "windows": 41
+    },
+    {
+      "session_id": 50,
+      "label": "focused",
+      "user_id": "demo-user-05",
+      "task_type": "安静思考",
+      "raw_samples": 3276,
+      "windows": 28
+    },
+    {
+      "session_id": 51,
+      "label": "distracted",
+      "user_id": "demo-user-05",
+      "task_type": "翻动物品",
+      "raw_samples": 5265,
+      "windows": 43
+    },
+    {
+      "session_id": 52,
+      "label": "focused",
+      "user_id": "demo-user-05",
+      "task_type": "写字",
+      "raw_samples": 3094,
+      "windows": 22
+    },
+    {
+      "session_id": 53,
+      "label": "distracted",
+      "user_id": "demo-user-05",
+      "task_type": "离开座位",
+      "raw_samples": 1800,
+      "windows": 10
+    },
+    {
+      "session_id": 54,
+      "label": "distracted",
+      "user_id": "demo-user-05",
+      "task_type": "玩手机",
+      "raw_samples": 3200,
+      "windows": 28
+    }
+  ],
+  "artifact": "C:\\Users\\23017\\Desktop\\ring_sound_SDK\\models\\focus_classifier.joblib",
+  "leave_one_user_out_average": {
+    "accuracy": 0.5269,
+    "balanced_accuracy": 0.5008,
+    "recall_focused": 0.5952,
+    "recall_distracted": 0.4063,
+    "f1_focused": 0.5596,
+    "roc_auc": 0.5318
+  }
+}

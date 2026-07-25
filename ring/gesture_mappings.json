@@ -1,0 +1,23 @@
+{
+  "focus": {
+    "single_click": "mark_distraction",
+    "double_click": "end_focus",
+    "wave": "ignore",
+    "rotate_front": "ignore",
+    "rotate_back": "ignore"
+  },
+  "rest": {
+    "single_click": "avatar_interact",
+    "double_click": "enter_focus",
+    "wave": "avatar_come",
+    "rotate_front": "plant_new_seed",
+    "rotate_back": "switch_weather"
+  },
+  "sleep": {
+    "single_click": "ignore",
+    "double_click": "wake_up",
+    "wave": "ignore",
+    "rotate_front": "ignore",
+    "rotate_back": "ignore"
+  }
+}

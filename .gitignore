@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# .NET
+[Bb]in/
+[Oo]bj/
+*.user
+.vs/
+
+# Secrets
+.env
+*.key
+*.pem
+!.env.template
+
+# IDE / OS
+.qoder/
+.idea/
+.vscode/settings.json
+*.swp
+.DS_Store
+Thumbs.db
+
+# Build outputs
+*.exe
+dist/
+build/
+.next/
+out/
+
+# Runtime artifacts
+audio/
+*.wav
+*.log
+farm_log_*.log
+bridge_data.json
+actions/
+
+# Large binaries
+*.zip
+*.apk
+*.STEP
+*.step
+*.bin
+
+# Temp
+*.tmp

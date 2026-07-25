@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分身农庄 - 专注 HUD</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #1a1a2e;
+  --card: rgba(255,255,255,0.08);
+  --card-border: rgba(255,255,255,0.15);
+  --text: #e0e0e0;
+  --text-dim: #888;
+  --accent: #ffd700;
+  --green: #4caf50;
+  --red: #ef5350;
+  --blue: #42a5f5;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* 顶栏 */
+.topbar {
+  display: flex; align-items: center; gap: 20px;
+  padding: 12px 20px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  margin-bottom: 16px;
+}
+.topbar .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); }
+.topbar .dot.online { background: var(--green); }
+.topbar .label { font-size: 13px; color: var(--text-dim); }
+.topbar .value { font-size: 15px; font-weight: 600; }
+.topbar .sep { width: 1px; height: 24px; background: var(--card-border); }
+
+/* 卡片区 */
+.cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px;
+  backdrop-filter: blur(10px);
+}
+.card h3 { font-size: 13px; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.card .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.card .row .k { color: var(--text-dim); font-size: 13px; }
+.card .row .v { font-size: 14px; font-weight: 500; }
+.card .big { font-size: 28px; font-weight: 700; color: var(--accent); text-align: center; margin: 8px 0; }
+
+/* 进度条 */
+.bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.bar-green .bar-fill { background: var(--green); }
+.bar-gold .bar-fill { background: var(--accent); }
+
+/* 控制按钮 */
+.controls { display: flex; gap: 12px; margin-bottom: 16px; }
+.btn {
+  flex: 1; padding: 14px; border: none; border-radius: 10px;
+  font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btn-focus { background: var(--green); color: #fff; }
+.btn-focus:hover { background: #66bb6a; transform: scale(1.02); }
+.btn-focus.active { background: var(--red); }
+.btn-focus.active:hover { background: #e57373; }
+.btn-schedule { background: var(--blue); color: #fff; }
+.btn-schedule:hover { background: #64b5f6; transform: scale(1.02); }
+
+/* 反馈消息 */
+.feedback {
+  padding: 12px 16px; border-radius: 10px;
+  background: var(--card); border: 1px solid var(--card-border);
+  font-size: 14px; min-height: 44px;
+  display: flex; align-items: center; gap: 8px;
+}
+.feedback.positive { border-color: var(--green); }
+.feedback.negative { border-color: var(--red); }
+
+/* 连接状态 */
+.status-bar {
+  text-align: center; font-size: 12px; color: var(--text-dim);
+  padding: 8px; margin-top: 12px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 顶栏 -->
+  <div class="topbar">
+    <span class="dot" id="dotWs"></span>
+    <div><div class="label">连接</div><div class="value" id="wsStatus">断开</div></div>
+    <div class="sep"></div>
+    <span class="dot" id="dotRing"></span>
+    <div><div class="label">戒指</div><div class="value" id="ringStatus">离线</div></div>
+    <div class="sep"></div>
+    <div><div class="label">专注时长</div><div class="value" id="focusTimer">--:--</div></div>
+    <div class="sep"></div>
+    <div><div class="label">游戏时间</div><div class="value" id="gameTime">--:--</div></div>
+  </div>
+
+  <!-- 卡片区 -->
+  <div class="cards">
+    <!-- 现实状态 -->
+    <div class="card">
+      <h3>现实状态</h3>
+      <div class="big" id="realMode">REST</div>
+      <div class="row"><span class="k">效率</span><span class="v" id="efficiency">--</span></div>
+      <div class="bar-bg bar-gold"><div class="bar-fill" id="effBar" style="width:50%"></div></div>
+      <div class="row" style="margin-top:8px"><span class="k">分心次数</span><span class="v" id="distrCount">0</span></div>
+    </div>
+    <!-- 游戏状态 -->
+    <div class="card">
+      <h3>游戏分身</h3>
+      <div class="row"><span class="k">金币</span><span class="v" id="gold">--</span></div>
+      <div class="row"><span class="k">体力</span><span class="v" id="stamina">--</span></div>
+      <div class="bar-bg bar-green"><div class="bar-fill" id="staminaBar" style="width:100%"></div></div>
+      <div class="row" style="margin-top:8px"><span class="k">位置</span><span class="v" id="location">--</span></div>
+      <div class="row"><span class="k">模式</span><span class="v" id="gameMode">--</span></div>
+    </div>
+    <!-- 日程 -->
+    <div class="card">
+      <h3>今日日程</h3>
+      <div id="scheduleList" style="font-size:13px; color:var(--text-dim);">
+        暂无日程
+      </div>
+    </div>
+  </div>
+
+  <!-- 控制按钮 -->
+  <div class="controls">
+    <button class="btn btn-focus" id="btnFocus" onclick="toggleFocus()">开始专注</button>
+    <button class="btn btn-schedule" onclick="openSchedule()">事项规划</button>
+  </div>
+
+  <!-- 反馈 -->
+  <div class="feedback" id="feedbackBox">等待连接...</div>
+
+  <!-- 状态栏 -->
+  <div class="status-bar" id="statusBar">未连接</div>
+</div>
+
+<script>
+// ========== 配置 ==========
+// 优先从 URL hash 读取，否则用当前页面的 host（HTTP 和 WS 同端口）
+const serverAddr = location.hash.slice(1) || location.host || 'localhost:8766';
+const WS_URL = `ws://${serverAddr}`;
+
+let ws = null;
+let focusing = false;
+let reconnectTimer = null;
+
+// ========== WebSocket ==========
+function connect() {
+  document.getElementById('statusBar').textContent = `连接 ${WS_URL}...`;
+  try {
+    ws = new WebSocket(WS_URL);
+  } catch(e) {
+    scheduleReconnect(); return;
+  }
+  ws.onopen = () => {
+    document.getElementById('dotWs').classList.add('online');
+    document.getElementById('wsStatus').textContent = '在线';
+    document.getElementById('statusBar').textContent = `已连接 ${serverAddr}`;
+    document.getElementById('feedbackBox').textContent = '已连接 Machine A，等待状态推送...';
+  };
+  ws.onmessage = (evt) => {
+    try {
+      const msg = JSON.parse(evt.data);
+      if (msg.type === 'state_push') updateUI(msg.data);
+    } catch(e) {}
+  };
+  ws.onclose = () => {
+    document.getElementById('dotWs').classList.remove('online');
+    document.getElementById('wsStatus').textContent = '断开';
+    document.getElementById('statusBar').textContent = '连接断开，重连中...';
+    scheduleReconnect();
+  };
+  ws.onerror = () => { ws.close(); };
+}
+
+function scheduleReconnect() {
+  if (reconnectTimer) return;
+  reconnectTimer = setTimeout(() => { reconnectTimer = null; connect(); }, 3000);
+}
+
+// ========== UI 更新 ==========
+function updateUI(data) {
+  const real = data.real || {};
+  const game = data.game || {};
+  const ring = data.ring || {};
+  const fb = data.feedback || {};
+
+  // 戒指
+  const ringOn = ring.connected;
+  document.getElementById('dotRing').classList.toggle('online', ringOn);
+  document.getElementById('ringStatus').textContent = ringOn ? '在线' : '离线';
+
+  // 现实状态
+  const mode = (real.mode || 'rest').toUpperCase();
+  document.getElementById('realMode').textContent = mode;
+  document.getElementById('realMode').style.color =
+    mode === 'FOCUS' ? 'var(--green)' :
+    mode === 'DISTRACTED' ? 'var(--red)' : 'var(--text-dim)';
+
+  const eff = real.efficiency || 0;
+  document.getElementById('efficiency').textContent = (eff * 100).toFixed(0) + '%';
+  document.getElementById('effBar').style.width = (eff * 100) + '%';
+  document.getElementById('distrCount').textContent = real.distraction_count || 0;
+
+  // 专注计时
+  const elapsed = real.focus_elapsed_sec || 0;
+  if (mode === 'FOCUS' && elapsed > 0) {
+    const mm = Math.floor(elapsed / 60);
+    const ss = Math.floor(elapsed % 60);
+    document.getElementById('focusTimer').textContent = `${mm}:${String(ss).padStart(2,'0')}`;
+    focusing = true;
+    document.getElementById('btnFocus').textContent = '结束专注';
+    document.getElementById('btnFocus').classList.add('active');
+  } else {
+    document.getElementById('focusTimer').textContent = '--:--';
+    focusing = false;
+    document.getElementById('btnFocus').textContent = '开始专注';
+    document.getElementById('btnFocus').classList.remove('active');
+  }
+
+  // 游戏
+  document.getElementById('gold').textContent = (game.gold || 0) + 'g';
+  const st = game.stamina || 0;
+  document.getElementById('stamina').textContent = `${Math.round(st)} / 270`;
+  document.getElementById('staminaBar').style.width = Math.min(100, st / 270 * 100) + '%';
+  document.getElementById('location').textContent = game.location || '--';
+  document.getElementById('gameMode').textContent = game.mode || 'idle';
+
+  // 游戏时间
+  const t = game.day_time || 0;
+  const h = Math.floor(t / 100);
+  const m = t % 100;
+  document.getElementById('gameTime').textContent = `${h}:${String(m).padStart(2,'0')}`;
+
+  // 反馈
+  if (fb.msg) {
+    const box = document.getElementById('feedbackBox');
+    box.textContent = fb.msg;
+    box.className = 'feedback ' + (fb.positive ? 'positive' : 'negative');
+  }
+
+  // 日程（从 state_push 同步）
+  const schedule = data.schedule || [];
+  if (schedule.length > 0) {
+    const el = document.getElementById('scheduleList');
+    el.innerHTML = schedule.map(t => `<div style="margin:4px 0">\u2610 ${t}</div>`).join('');
+  }
+}
+
+// ========== 控制 ==========
+function toggleFocus() {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  const cmd = focusing ? 'end_focus' : 'start_focus';
+  ws.send(JSON.stringify({ type: 'user_command', command: cmd, data: {} }));
+}
+
+function openSchedule() {
+  const tasks = prompt('输入今日事项（逗号分隔）:', '写论文,复习数学,运动');
+  if (!tasks) return;
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  const list = tasks.split(',').map(t => t.trim()).filter(Boolean);
+  ws.send(JSON.stringify({ type: 'user_command', command: 'schedule', data: { tasks: list } }));
+  // 本地也渲染
+  const el = document.getElementById('scheduleList');
+  el.innerHTML = list.map((t,i) => `<div style="margin:4px 0">☐ ${t}</div>`).join('');
+}
+
+// ========== Demo 模式（离线回放） ==========
+const urlParams = new URLSearchParams(location.search);
+const DEMO = urlParams.get('demo') === '1';
+
+if (DEMO) {
+  document.getElementById('statusBar').textContent = '🔶 DEMO 模式 · 离线回放';
+  document.getElementById('feedbackBox').textContent = '离线演示中：无需连接服务器即可体验完整状态流转';
+
+  const demoSequence = [
+    // [delay_ms, partial_state_update]
+    [0,     { real: {mode:'focus',efficiency:0.75,focus_elapsed_sec:0,distraction_count:0}, game:{gold:2200,stamina:260,location:'Farm',mode:'farm',day_time:1020}, ring:{connected:true}, schedule:['写论文','复习数学','运动'] }],
+    [3000,  { real: {mode:'focus',efficiency:0.85,focus_elapsed_sec:180,distraction_count:0}, game:{gold:2380,stamina:230,location:'Farm',mode:'farm',day_time:1050} }],
+    [3000,  { real: {mode:'focus',efficiency:0.92,focus_elapsed_sec:360,distraction_count:0}, game:{gold:2560,stamina:200,location:'Farm',mode:'farm',day_time:1120}, feedback:{msg:'专注 6 分钟，农场丰收 180G！',positive:true} }],
+    [4000,  { real: {mode:'distracted',efficiency:0.28,focus_elapsed_sec:0,distraction_count:1}, game:{gold:2510,stamina:180,location:'Farm',mode:'idle',day_time:1140}, feedback:{msg:'检测到分心...',positive:false} }],
+    [3000,  { real: {mode:'distracted',efficiency:0.15,focus_elapsed_sec:0,distraction_count:3}, game:{gold:2460,stamina:170,location:'Farm',mode:'idle',day_time:1210}, feedback:{msg:'作物开始枯萎，回来专注吧！',positive:false} }],
+    [4000,  { real: {mode:'focus',efficiency:0.70,focus_elapsed_sec:10,distraction_count:0}, game:{gold:2460,stamina:160,location:'Farm',mode:'farm',day_time:1240}, feedback:{msg:'欢迎回来！分身重新开始耕作。',positive:true} }],
+    [3000,  { real: {mode:'focus',efficiency:0.82,focus_elapsed_sec:190,distraction_count:0}, game:{gold:2620,stamina:130,location:'Farm',mode:'farm',day_time:1310} }],
+    [3000,  { real: {mode:'rest',efficiency:0.5,focus_elapsed_sec:0,distraction_count:0}, game:{gold:2720,stamina:90,location:'FarmHouse',mode:'idle',day_time:1350}, feedback:{msg:'专注结束！本次收益 320G。',positive:true} }],
+  ];
+
+  let seqIdx = 0;
+  function playNext() {
+    if (seqIdx >= demoSequence.length) seqIdx = 0; // 循环
+    const [delay, state] = demoSequence[seqIdx];
+    updateUI(state);
+    seqIdx++;
+    setTimeout(playNext, delay);
+  }
+  playNext();
+
+  // 覆盖控制按钮
+  window.toggleFocus = () => {
+    document.getElementById('feedbackBox').textContent = '🔶 DEMO 模式：按钮仅作展示，实际需连接戒指';
+    document.getElementById('feedbackBox').className = 'feedback';
+  };
+  window.openSchedule = () => {
+    alert('🔶 DEMO 模式：日程功能需连接 Machine A');
+  };
+} else {
+  // ========== 启动（非 Demo） ==========
+  connect();
+}
+</script>
+</body>
+</html>

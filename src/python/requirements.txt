@@ -1,0 +1,18 @@
+# 分身农庄 - Python 依赖
+# pip install -r requirements.txt
+
+# BLE 戒指通信
+bleak>=0.22.0
+
+# 日志
+loguru>=0.7.0
+
+# LLM 客户端（云端 Claude/GPT）
+httpx>=0.28.0
+openai>=1.0.0           # OpenAI/DeepSeek SDK
+
+# 音频处理
+# ffmpeg 需单独安装（系统级）
+
+# WebSocket（可选：前端 HUD）
+websockets>=14.0

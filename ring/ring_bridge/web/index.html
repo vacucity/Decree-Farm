@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>专注 Agent 控制台</title>
+<link rel="stylesheet" href="/static/style.css?v=20260724-focus-agent1">
+</head>
+<body>
+
+<!-- ====== 顶部状态栏 ====== -->
+<header id="topbar">
+  <div class="brand">
+    <div class="logo">FOCUS AGENT</div>
+    <div class="brand-sub">RING × FARM ECONOMY</div>
+  </div>
+  <div id="connection-badge" class="badge disconnected">
+    <span class="dot"></span><span id="conn-text">未连接</span>
+  </div>
+</header>
+
+<!-- ====== 标签页导航 ====== -->
+<nav id="tabs">
+  <button class="tab active" data-tab="agent">🌱 Agent 经营</button>
+  <button class="tab" data-tab="capture">🏷️ 标注采集</button>
+  <button class="tab" data-tab="imu">📐 IMU</button>
+  <button class="tab" data-tab="gestures">✋ 手势</button>
+  <button class="tab" data-tab="system">⚙️ 系统</button>
+</nav>
+
+<!-- ====== 面板内容 ====== -->
+<main id="panels">
+
+  <!-- 专注 Agent 经营主面板 -->
+  <section id="panel-agent" class="panel active">
+    <div class="panel-hero agent-hero">
+      <div>
+        <div class="panel-kicker">FOCUS-DRIVEN AGENT</div>
+        <h1>让客户的专注驱动 Agent 经营</h1>
+        <p>戒指负责发起专注会话并采集 IMU；客户专注时 Agent 获得经营收益，非专注时触发减产惩罚。</p>
+      </div>
+      <div class="hero-icon">🌾</div>
+    </div>
+
+    <div class="model-status-note">
+      <strong>当前阶段：已有二分类模型实时推理</strong>
+      <span>三击戒指开始专注并启动真实 IMU；模型持续输出“专注/非专注”，四击戒指结束会话。</span>
+    </div>
+
+    <div class="agent-status-grid">
+      <article class="agent-status-card session">
+        <span>专注会话</span>
+        <strong id="agent-session-state">尚未开始</strong>
+        <small id="agent-session-time">三击戒指开始</small>
+      </article>
+      <article class="agent-status-card customer" data-state="focused" id="agent-customer-card">
+        <span>客户状态</span>
+        <strong id="agent-customer-state">专注</strong>
+        <small id="agent-state-source">等待真实 IMU 模型判断</small>
+      </article>
+      <article class="agent-status-card action">
+        <span>Agent 当前行为</span>
+        <strong id="agent-action">等待专注会话</strong>
+        <small>自动执行类星露谷经营任务</small>
+      </article>
+    </div>
+
+    <div class="agent-economy">
+      <div><span>经营余额</span><strong id="agent-balance">0.0</strong><small>金币</small></div>
+      <div><span>累计收成</span><strong id="agent-harvest">0</strong><small>批</small></div>
+      <div><span>惩罚次数</span><strong id="agent-penalty">0</strong><small>次</small></div>
+    </div>
+
+    <div class="agent-growth-card">
+      <div class="agent-growth-head">
+        <span>当前作物成长</span><strong id="agent-growth-label">0%</strong>
+      </div>
+      <div class="agent-growth-track"><span id="agent-growth-fill"></span></div>
+      <p id="agent-economy-rule">专注：持续成长并产生收成；非专注：减产并累计惩罚。</p>
+    </div>
+
+    <div class="agent-control-grid">
+      <div class="agent-control-card">
+        <span class="agent-control-kicker">戒指会话控制</span>
+        <strong>三击开始，四击结束</strong>
+        <p id="agent-button-pattern">等待三击或四击</p>
+        <div class="agent-control-actions">
+          <button class="btn primary" data-agent-action="start">调试开始</button>
+          <button class="btn" data-agent-action="end">调试结束</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMU 数据 -->
+  <section id="panel-imu" class="panel">
+    <div class="section-title">📐 实时加速度 & 陀螺仪</div>
+    <div class="imu-activation-card">
+      <div>
+        <strong>V2 硬件 IMU 激活</strong>
+        <span>保持蓝牙连接，长按至红灯亮起并松开，再点击右侧按钮。不会断开或重新连接戒指。</span>
+      </div>
+      <button class="btn primary" id="btn-imu-retry">红灯已亮，重新请求真实 IMU</button>
+    </div>
+    <div class="imu-grid">
+      <div class="imu-chart-container">
+        <div class="chart-title">加速度 X/Y/Z</div>
+        <canvas id="chart-accel"></canvas>
+      </div>
+      <div class="imu-chart-container">
+        <div class="chart-title">陀螺仪 X/Y/Z</div>
+        <canvas id="chart-gyro"></canvas>
+      </div>
+    </div>
+    <div class="imu-latest">
+      <div class="imu-row">
+        <span>戒指模式</span>
+        <span id="imu-device-mode" data-mode="disconnected">未连接</span>
+      </div>
+      <div class="imu-row">
+        <span>数据流</span>
+        <span id="imu-stream-state" data-tone="idle">等待连接</span>
+      </div>
+      <div class="imu-row">
+        <span>状态说明</span>
+        <span id="imu-stream-detail">连接戒指后将自动启动实时六轴数据。</span>
+      </div>
+      <div class="imu-row">
+        <span>已接收样本</span>
+        <span id="imu-sample-count">0</span>
+      </div>
+      <div class="imu-row">
+        <span>有效 0x0605 包</span>
+        <span id="imu-packet-count">0</span>
+      </div>
+      <div class="imu-row">
+        <span>协议解析错误</span>
+        <span id="imu-protocol-errors">0</span>
+      </div>
+      <div class="imu-row">
+        <span>加速度</span>
+        <span id="imu-accel">--</span>
+      </div>
+      <div class="imu-row">
+        <span>陀螺仪</span>
+        <span id="imu-gyro">--</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 手势事件 -->
+  <section id="panel-gestures" class="panel">
+    <div class="card-grid three">
+      <div class="card accent">
+        <div class="card-label">向后旋转</div>
+        <div class="card-value big" id="count-rotate-back">0</div>
+      </div>
+      <div class="card accent">
+        <div class="card-label">向前旋转</div>
+        <div class="card-value big" id="count-rotate-front">0</div>
+      </div>
+      <div class="card accent">
+        <div class="card-label">挥手</div>
+        <div class="card-value big" id="count-wave">0</div>
+      </div>
+    </div>
+    <div class="card-grid two">
+      <div class="card">
+        <div class="card-label">单击</div>
+        <div class="card-value" id="count-click">0</div>
+      </div>
+      <div class="card">
+        <div class="card-label">双击</div>
+        <div class="card-value" id="count-double">0</div>
+      </div>
+    </div>
+    <div class="section-title">📋 手势历史</div>
+    <div class="log-container" id="gesture-log">
+      <div class="log-empty">暂无手势事件</div>
+    </div>
+  </section>
+
+  <!-- 系统 -->
+  <section id="panel-system" class="panel">
+    <div class="connection-card">
+      <div class="connection-copy">
+        <span class="connection-label">戒指蓝牙</span>
+        <strong id="connection-title">等待连接</strong>
+      </div>
+      <div class="connection-controls">
+        <input id="mac-input" class="mac-input" value="" placeholder="输入新戒指地址，如 AA:BB:CC:DD:EE:FF" autocomplete="off" spellcheck="false" aria-label="戒指蓝牙地址">
+        <button class="btn primary" id="btn-connect">连接</button>
+        <button class="btn" id="btn-disconnect">断开</button>
+      </div>
+      <div class="connection-message" id="connection-message">可扫描附近设备，或直接输入 MAC 地址。</div>
+    </div>
+    <div class="showcase-card" id="showcase-card" data-grade="not_ready">
+      <div class="showcase-head">
+        <div>
+          <span class="connection-label">SHOWCASE SAFETY</span>
+          <strong id="showcase-status">等待路演预检</strong>
+          <p id="showcase-summary">连接后检查蓝牙、控制包、手势模式和真实六轴数据。</p>
+        </div>
+        <span class="showcase-indicator"></span>
+      </div>
+      <div id="showcase-checks" class="showcase-checks">
+        <div class="log-empty">连接戒指后运行预检</div>
+      </div>
+      <div class="showcase-actions">
+        <button class="btn" id="btn-showcase-preflight">运行路演预检</button>
+        <button class="btn primary" id="btn-showcase-toggle">启用保障模式</button>
+      </div>
+      <p class="showcase-note">保障模式必须先通过一次真实 0x0605 验证，之后才会在真实 IMU 中断 3 秒后接管；恢复后自动交还，且不会写入标注训练集。</p>
+    </div>
+    <div class="action-bar">
+      <button class="btn primary" id="btn-scan">🔍 扫描设备</button>
+      <button class="btn" id="btn-system-refresh">🔄 刷新状态</button>
+    </div>
+    <div class="section-title">蓝牙设备</div>
+    <div id="device-list">
+      <div class="log-empty">点击扫描查找戒指</div>
+    </div>
+    <div class="section-title">系统信息</div>
+    <div id="system-info">
+      <div class="sys-row"><span>固件版本</span><span id="sys-fw">--</span></div>
+      <div class="sys-row"><span>当前戒指地址</span><span id="sys-mac">--</span></div>
+      <div class="sys-row"><span>电量</span><span id="sys-battery">--</span></div>
+      <div class="sys-row"><span>充电状态</span><span id="sys-charging">--</span></div>
+      <div class="sys-row"><span>戒指模式</span><span id="ring-device-mode" data-mode="disconnected">未连接</span></div>
+      <div class="sys-row"><span>应用模式</span><span id="sys-mode">--</span></div>
+    </div>
+  </section>
+
+  <!-- 专注状态标注采集 -->
+  <section id="panel-capture" class="panel">
+    <div class="panel-hero capture-hero">
+      <div>
+        <div class="panel-kicker">FOCUS DATA LAB</div>
+        <h1>采集专注训练数据</h1>
+        <p>只采集“专注/非专注”两类真实状态，并保存对应时间段的加速度与陀螺仪；历史“不确定”数据仍保留但不再新增。</p>
+      </div>
+      <div class="hero-icon">◎</div>
+    </div>
+
+    <div class="capture-form">
+      <label>
+        <span>用户编号</span>
+        <input id="capture-user" class="capture-input" value="demo-user-01" maxlength="80">
+      </label>
+      <label>
+        <span>当前任务</span>
+        <input id="capture-task" class="capture-input" value="阅读/电脑工作" maxlength="120">
+      </label>
+      <label>
+        <span>佩戴手</span>
+        <select id="capture-hand" class="capture-input">
+          <option value="right">右手</option>
+          <option value="left">左手</option>
+        </select>
+      </label>
+      <label>
+        <span>戒指方向</span>
+        <select id="capture-orientation" class="capture-input">
+          <option value="neutral">正常佩戴</option>
+          <option value="inward">标记朝内</option>
+          <option value="outward">标记朝外</option>
+          <option value="unknown">不确定</option>
+        </select>
+      </label>
+      <label class="capture-notes-field">
+        <span>备注（可选）</span>
+        <input id="capture-notes" class="capture-input" placeholder="例如：打字、翻页、拿水杯">
+      </label>
+    </div>
+
+    <div class="capture-label-grid">
+      <button class="capture-label focused" data-capture-label="focused">
+        <strong>专注</strong><small>正在持续完成目标任务</small>
+      </button>
+      <button class="capture-label distracted" data-capture-label="distracted">
+        <strong>非专注</strong><small>刷手机、离开任务或明显走神</small>
+      </button>
+    </div>
+
+    <div id="capture-live" class="capture-live" data-active="false">
+      <div>
+        <span class="capture-live-dot"></span>
+        <strong id="capture-live-title">尚未开始采集</strong>
+        <p id="capture-live-detail">选择上方一种状态开始记录。</p>
+      </div>
+      <button id="btn-capture-stop" class="btn danger" disabled>停止当前片段</button>
+    </div>
+
+    <div class="capture-summary">
+      <div><span>专注</span><strong id="capture-total-focused">0</strong><small>样本</small></div>
+      <div><span>非专注</span><strong id="capture-total-distracted">0</strong><small>样本</small></div>
+    </div>
+
+    <div class="capture-tools">
+      <span id="capture-db-note">数据保存在本机 SQLite</span>
+      <div>
+        <button id="btn-capture-refresh" class="btn">刷新</button>
+        <a class="btn primary capture-export" href="/api/capture/export.csv">导出 CSV</a>
+      </div>
+    </div>
+    <div class="section-title">最近采集片段</div>
+    <div id="capture-recent" class="capture-recent">
+      <div class="log-empty">暂无采集记录</div>
+    </div>
+  </section>
+
+</main>
+
+<script src="/static/app.js?v=20260724-capture-stability1"></script>
+</body>
+</html>
