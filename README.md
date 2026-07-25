@@ -205,3 +205,12 @@ demo 模式会按键盘指令模拟双击（开始/结束专注），全流程�
 ## License
 
 Hackathon project — MIT.
+
+## Demo
+
+
+https://github.com/user-attachments/assets/e67df608-e021-4137-8995-41f11954a5b2
+
+
+
+
