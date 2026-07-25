@@ -10,7 +10,7 @@ AdventureX 2026 参赛项目。
 
 Decree Farm 由**双机协同**构成完整闭环：
 
-- **Machine B（感知端）**：智能蓝牙戒指 + 随机森林专注分类器 + 桥接服务，把"专注"量化为实时概率信号；
+- **Machine B（感知端）**：智能蓝牙戒指 + HMM专注分类器 + 桥接服务，把"专注"量化为实时概率信号；
 - **Machine A（执行端）**：真实运行的《星露谷物语 1.6》+ SMAPI MOD + Python AI 智能体，把专注翻译成游戏化身的自主劳作（浇水/收割/钓鱼/出货），把分心翻译成真实的游戏内经济惩罚（扣金币、作物枯萎）。
 
 ```
@@ -199,7 +199,7 @@ demo 模式会按键盘指令模拟双击（开始/结束专注），全流程�
 ## 技术栈
 
 - **Machine A**：Python 3.11 + asyncio + websockets + loguru；C# .NET 6 + SMAPI 4.x；Windows SAPI TTS
-- **Machine B**：Python + aiohttp + bleak + scikit-learn（随机森林，63 维 IMU 特征，3s 窗口，准确率 0.711 / AUC 0.784）
+- **Machine B**：Python + aiohttp + bleak + scikit-learn（HMM，63 维 IMU 特征，3s 窗口，准确率 0.711 / AUC 0.784）
 - **通信**：双 WebSocket（:8765 MOD 桥 / :8766 LAN 中继），文件桥透明兜底
 
 ## License
